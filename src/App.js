@@ -29,7 +29,7 @@ function App() {
   
 
   useEffect(() => {
-    if(bounds.sw && bounds.ne) {
+    if(bounds) {
       setIsLoading(true);
 
       getPlacesData(type, bounds.sw, bounds.ne).then((data) => { 
