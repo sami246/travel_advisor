@@ -2,11 +2,11 @@ import React from 'react'
 import './styles'
 import useStyles from './styles'
 
-const PlaceDetails = () => {
+const PlaceDetails = ({place}) => {
   const classes = useStyles();
 
   return (
-    <div>PlaceDetails</div>
+    <h1>{place.name}</h1>
   )
 }
 
