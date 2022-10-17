@@ -7,13 +7,29 @@ import { getPlacesData } from './api';
 
 function App() {
   const [places, setPlaces] = useState([])
+  const [coordinates, setCoordinates] = useState({})
+  const [bounds, setBounds] = useState(null)
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    getPlacesData().then((data) => { 
-      console.log("data", data)
-      setPlaces(data)
+    navigator.geolocation.getCurrentPosition(({ coords: {latitude, longitude}}) => {
+        setCoordinates({ lat: latitude, lng: longitude})
     })
   }, [])
+  
+
+  useEffect(() => {
+    if(bounds) {
+      setIsLoading(true);
+
+      getPlacesData(bounds.sw, bounds.ne).then((data) => { 
+        console.log("data", data)
+        setPlaces(data)
+        setIsLoading(false);
+      })
+    }
+
+  }, [coordinates, bounds])
 
   return (
     <>
@@ -22,10 +38,16 @@ function App() {
     <Grid container spacing={3} style={{ width: '100%'}}>
       {/* This grid will take full width on mobile devices, on medium and larger it will only take 4/12 spaces */}
       <Grid item xs={12} md={4}>
-        < List />
+        < List 
+          isLoading={isLoading}
+          places={places}/>
       </Grid>
       <Grid item xs={12} md={8}>
-      < Map />
+      < Map 
+        setCoordinates={setCoordinates}
+        setBounds={setBounds}
+        coordinates={coordinates}
+        />
     </Grid>
     </Grid>
     </>
