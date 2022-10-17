@@ -29,22 +29,24 @@ function App() {
   
 
   useEffect(() => {
-    if(bounds) {
+    if(bounds.sw && bounds.ne) {
       setIsLoading(true);
 
       getPlacesData(type, bounds.sw, bounds.ne).then((data) => { 
-        setPlaces(data)
+        setPlaces(data?.filter((place) => place.name && place.num_reviews > 0))
         setFilteredPlaces([])
         setIsLoading(false);
       })
     }
 
-  }, [coordinates, bounds, type])
+  }, [bounds, type])
 
   return (
     <>
     <CssBaseline />
-    <Header />
+    <Header 
+      setCoordinates={setCoordinates}
+    />
     <Grid container spacing={3} style={{ width: '100%'}}>
       {/* This grid will take full width on mobile devices, on medium and larger it will only take 4/12 spaces */}
       <Grid item xs={12} md={4}>
